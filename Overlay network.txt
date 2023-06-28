@@ -1,0 +1,301 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net","namespace":"kube-system"}}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    labels:
+      name: weave-net
+    name: weave-net
+    namespace: kube-system
+    resourceVersion: "1474"
+    uid: 33757a65-421c-48ab-b2be-6782ed746d72
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net"},"rules":[{"apiGroups":[""],"resources":["pods","namespaces","nodes"],"verbs":["get","list","watch"]},{"apiGroups":["extensions"],"resources":["networkpolicies"],"verbs":["get","list","watch"]},{"apiGroups":["networking.k8s.io"],"resources":["networkpolicies"],"verbs":["get","list","watch"]},{"apiGroups":[""],"resources":["nodes/status"],"verbs":["patch","update"]}]}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    labels:
+      name: weave-net
+    name: weave-net
+    resourceVersion: "1475"
+    uid: 5468462b-79d8-4c52-a84d-cda969a37708
+  rules:
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - namespaces
+    - nodes
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - extensions
+    resources:
+    - networkpolicies
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - networking.k8s.io
+    resources:
+    - networkpolicies
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - nodes/status
+    verbs:
+    - patch
+    - update
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRoleBinding","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"ClusterRole","name":"weave-net"},"subjects":[{"kind":"ServiceAccount","name":"weave-net","namespace":"kube-system"}]}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    labels:
+      name: weave-net
+    name: weave-net
+    resourceVersion: "1476"
+    uid: cc511144-b338-46d0-bd80-d5aa261b095f
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: weave-net
+  subjects:
+  - kind: ServiceAccount
+    name: weave-net
+    namespace: kube-system
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net","namespace":"kube-system"},"rules":[{"apiGroups":[""],"resourceNames":["weave-net"],"resources":["configmaps"],"verbs":["get","update"]},{"apiGroups":[""],"resources":["configmaps"],"verbs":["create"]}]}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    labels:
+      name: weave-net
+    name: weave-net
+    namespace: kube-system
+    resourceVersion: "1477"
+    uid: b092f211-5a0f-4acd-b242-06ec1228e536
+  rules:
+  - apiGroups:
+    - ""
+    resourceNames:
+    - weave-net
+    resources:
+    - configmaps
+    verbs:
+    - get
+    - update
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    verbs:
+    - create
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"RoleBinding","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net","namespace":"kube-system"},"roleRef":{"apiGroup":"rbac.authorization.k8s.io","kind":"Role","name":"weave-net"},"subjects":[{"kind":"ServiceAccount","name":"weave-net","namespace":"kube-system"}]}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    labels:
+      name: weave-net
+    name: weave-net
+    namespace: kube-system
+    resourceVersion: "1478"
+    uid: 0d34fdbe-45c1-4d44-9f84-c26f66235e4c
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: weave-net
+  subjects:
+  - kind: ServiceAccount
+    name: weave-net
+    namespace: kube-system
+- apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    annotations:
+      deprecated.daemonset.template.generation: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"DaemonSet","metadata":{"annotations":{},"labels":{"name":"weave-net"},"name":"weave-net","namespace":"kube-system"},"spec":{"minReadySeconds":5,"selector":{"matchLabels":{"name":"weave-net"}},"template":{"metadata":{"labels":{"name":"weave-net"}},"spec":{"containers":[{"command":["/home/weave/launch.sh"],"env":[{"name":"INIT_CONTAINER","value":"true"},{"name":"HOSTNAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"spec.nodeName"}}}],"image":"weaveworks/weave-kube:latest","imagePullPolicy":"Always","name":"weave","readinessProbe":{"httpGet":{"host":"127.0.0.1","path":"/status","port":6784}},"resources":{"requests":{"cpu":"50m"}},"securityContext":{"privileged":true},"volumeMounts":[{"mountPath":"/weavedb","name":"weavedb"},{"mountPath":"/host/var/lib/dbus","name":"dbus","readOnly":true},{"mountPath":"/host/etc/machine-id","name":"cni-machine-id","readOnly":true},{"mountPath":"/run/xtables.lock","name":"xtables-lock","readOnly":false}]},{"env":[{"name":"HOSTNAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"spec.nodeName"}}}],"image":"weaveworks/weave-npc:latest","imagePullPolicy":"Always","name":"weave-npc","resources":{"requests":{"cpu":"50m"}},"securityContext":{"privileged":true},"volumeMounts":[{"mountPath":"/run/xtables.lock","name":"xtables-lock","readOnly":false}]}],"dnsPolicy":"ClusterFirstWithHostNet","hostNetwork":true,"hostPID":false,"initContainers":[{"command":["/home/weave/init.sh"],"env":null,"image":"weaveworks/weave-kube:latest","imagePullPolicy":"Always","name":"weave-init","securityContext":{"privileged":true},"volumeMounts":[{"mountPath":"/host/opt","name":"cni-bin"},{"mountPath":"/host/home","name":"cni-bin2"},{"mountPath":"/host/etc","name":"cni-conf"},{"mountPath":"/lib/modules","name":"lib-modules"},{"mountPath":"/run/xtables.lock","name":"xtables-lock","readOnly":false}]}],"priorityClassName":"system-node-critical","restartPolicy":"Always","securityContext":{"seLinuxOptions":{}},"serviceAccountName":"weave-net","tolerations":[{"effect":"NoSchedule","operator":"Exists"},{"effect":"NoExecute","operator":"Exists"}],"volumes":[{"hostPath":{"path":"/var/lib/weave"},"name":"weavedb"},{"hostPath":{"path":"/opt"},"name":"cni-bin"},{"hostPath":{"path":"/home"},"name":"cni-bin2"},{"hostPath":{"path":"/etc"},"name":"cni-conf"},{"hostPath":{"path":"/etc/machine-id"},"name":"cni-machine-id"},{"hostPath":{"path":"/var/lib/dbus"},"name":"dbus"},{"hostPath":{"path":"/lib/modules"},"name":"lib-modules"},{"hostPath":{"path":"/run/xtables.lock","type":"FileOrCreate"},"name":"xtables-lock"}]}},"updateStrategy":{"type":"RollingUpdate"}}}
+    creationTimestamp: "2023-06-09T07:53:49Z"
+    generation: 1
+    labels:
+      name: weave-net
+    name: weave-net
+    namespace: kube-system
+    resourceVersion: "1479"
+    uid: caeb528e-55d6-47cb-b77b-87d3154ec910
+  spec:
+    minReadySeconds: 5
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        name: weave-net
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: weave-net
+      spec:
+        containers:
+        - command:
+          - /home/weave/launch.sh
+          env:
+          - name: INIT_CONTAINER
+            value: "true"
+          - name: HOSTNAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          image: weaveworks/weave-kube:latest
+          imagePullPolicy: Always
+          name: weave
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              host: 127.0.0.1
+              path: /status
+              port: 6784
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 50m
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /weavedb
+            name: weavedb
+          - mountPath: /host/var/lib/dbus
+            name: dbus
+            readOnly: true
+          - mountPath: /host/etc/machine-id
+            name: cni-machine-id
+            readOnly: true
+          - mountPath: /run/xtables.lock
+            name: xtables-lock
+        - env:
+          - name: HOSTNAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          image: weaveworks/weave-npc:latest
+          imagePullPolicy: Always
+          name: weave-npc
+          resources:
+            requests:
+              cpu: 50m
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /run/xtables.lock
+            name: xtables-lock
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true
+        initContainers:
+        - command:
+          - /home/weave/init.sh
+          image: weaveworks/weave-kube:latest
+          imagePullPolicy: Always
+          name: weave-init
+          resources: {}
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /host/opt
+            name: cni-bin
+          - mountPath: /host/home
+            name: cni-bin2
+          - mountPath: /host/etc
+            name: cni-conf
+          - mountPath: /lib/modules
+            name: lib-modules
+          - mountPath: /run/xtables.lock
+            name: xtables-lock
+        priorityClassName: system-node-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          seLinuxOptions: {}
+        serviceAccount: weave-net
+        serviceAccountName: weave-net
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - effect: NoSchedule
+          operator: Exists
+        - effect: NoExecute
+          operator: Exists
+        volumes:
+        - hostPath:
+            path: /var/lib/weave
+            type: ""
+          name: weavedb
+        - hostPath:
+            path: /opt
+            type: ""
+          name: cni-bin
+        - hostPath:
+            path: /home
+            type: ""
+          name: cni-bin2
+        - hostPath:
+            path: /etc
+            type: ""
+          name: cni-conf
+        - hostPath:
+            path: /etc/machine-id
+            type: ""
+          name: cni-machine-id
+        - hostPath:
+            path: /var/lib/dbus
+            type: ""
+          name: dbus
+        - hostPath:
+            path: /lib/modules
+            type: ""
+          name: lib-modules
+        - hostPath:
+            path: /run/xtables.lock
+            type: FileOrCreate
+          name: xtables-lock
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+      type: RollingUpdate
+  status:
+    currentNumberScheduled: 0
+    desiredNumberScheduled: 0
+    numberMisscheduled: 0
+    numberReady: 0
+kind: List
+metadata: {}
